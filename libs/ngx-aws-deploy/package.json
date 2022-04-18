@@ -1,6 +1,6 @@
 {
-  "name": "@jefiozie/ngx-aws-deploy",
-  "version": "4.1.0",
+  "name": "@maxletou/ngx-aws-deploy",
+  "version": "4.2.2",
   "description": "Deploy an Angular app to Amazon S3 directly from the Angular CLI",
   "main": "index.js",
   "builders": "./builders.json",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Jefiozie/ngx-aws-deploy.git"
+    "url": "https://github.com/maxletourneur/ngx-aws-deploy.git"
   },
   "keywords": [
     "angular",

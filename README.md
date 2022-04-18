@@ -1,3 +1,5 @@
+# Disclaimer: This is a temporary fork from [@jefiozie/ngx-aws-deploy](https://www.npmjs.com/package/@jefiozie/ngx-aws-deploy) <-- use this instead
+
 # NGX-AWS-DEPLOY
 
 ☁️🚀 Deploy your Angular app to Amazon S3 directly from the Angular CLI 🚀☁️
