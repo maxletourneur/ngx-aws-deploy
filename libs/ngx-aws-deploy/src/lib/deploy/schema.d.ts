@@ -1,3 +1,5 @@
+export type GlobFileUploadParams = { glob: string } & PutObjectRequest;
+export type GlobFileUploadParamsList = Array<GlobFileUploadParams>;
 export interface Schema {
   configuration?: string;
   buildTarget?: string;
@@ -9,4 +11,5 @@ export interface Schema {
   bucket?: string;
   subFolder?: string;
   cfDistributionId?: string;
+  globFileUploadParamsList?: GlobFileUploadParamsList;
 }

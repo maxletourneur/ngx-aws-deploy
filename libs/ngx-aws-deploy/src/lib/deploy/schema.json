@@ -50,6 +50,10 @@
     "buildTarget": {
       "type": "string",
       "description": "A named build target, as specified in the `configurations` section of angular.json . Each named target is accompanied by a configuration of option defaults for that target. This is equivalent as calling the command `ng build --configuration=XXX`."
+    },
+    "globFileUploadParamsList": {
+      "type": "string",
+      "description": "A stringified array of objects representing params to pass to the s3.upload method (https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#upload-property). In addition to the params, each object has a glob property allowing to target params to specific files."
     }
   }
 }
