@@ -1,3 +1,9 @@
+# Disclaimer: This is a temporary fork from [@jefiozie/ngx-aws-deploy](https://www.npmjs.com/package/@jefiozie/ngx-aws-deploy) <-- use this instead
+
+# This temporary fork adds the new feature waiting to be merged in the original repo, vv linked below vv
+
+# [add a globFileUploadParamsList option to set properties on uploaded files](https://github.com/Jefiozie/ngx-aws-deploy/pull/410)
+
 # NGX-AWS-DEPLOY
 
 ☁️🚀 Deploy your Angular app to Amazon S3 directly from the Angular CLI 🚀☁️
@@ -41,19 +47,64 @@
    ```sh
    ng add @jefiozie/ngx-aws-deploy
    ```
+
 4. After these steps your `angular.json` is updated with a new builder:
+
    ```json
    "deploy": {
-       "builder": "@jefiozie/ngx-aws-deploy:deploy",
-       "options": {}
+      "builder": "@jefiozie/ngx-aws-deploy:deploy",
+      "options": {}
    }
    ```
-5. Due to security risk we have made the decision to never add any options to the `angular.json`. You should set the environments variable during the `ng deploy` command.  Below a example on how you could do this.
+
+5. Due to security risk we have made the decision to never add any options to the `angular.json`. You should set the environments variable during the `ng deploy` command. Below is an example on how you could do this.
 
 ```bash
-npx cross-env NG_DEPLOY_AWS_ACCESS_KEY_ID=1234 NG_DEPLOY_AWS_SECRET_ACCESS_KEY=321ACCESS NG_DEPLOY_AWS_BUCKET=mys3bucket NG_DEPLOY_AWS_REGION=eu-1-region ng deploy
+npx cross-env NG_DEPLOY_AWS_ACCESS_KEY_ID=1234 NG_DEPLOY_AWS_SECRET_ACCESS_KEY=321ACCESS NG_DEPLOY_AWS_BUCKET=mys3bucket NG_DEPLOY_AWS_REGION=eu-1-region NG_DEPLOY_AWS_SUB_FOLDER=path/on/bucker ng deploy
 ```
-6. Run `ng deploy` to deploy your application to Amazon S3.
+
+6. To trigger an optional invalidation of the files in an AWS CloudFront distribution, add these parameters to the above command line:
+
+```
+npx cross-env ... NG_DEPLOY_AWS_CF_DISTRIBUTION_ID=1234 ... ng deploy
+```
+
+7. To apply properties on uploaded files, use the `NG_DEPLOY_AWS_GLOB_FILE_UPLOAD_PARAMS_LIST` variable or the target option `globFileUploadParamsList` as shown below.  
+   We use an array of objects to represent the different configurations.  
+   Each config object needs a `glob` property to define on which files the params will be set.  
+   Other properties on the config object are the params to apply.
+   For informations about the possible params (ACL, Bucket, CacheControl, etc), checkout the documentation of the `s3.upload` method (https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#upload-property)
+
+```json
+"deploy": {
+  "builder": "@jefiozie/ngx-aws-deploy:deploy",
+  "options": {
+    "globFileUploadParamsList": [
+      {
+        "glob": "*",
+        "ACL": "public-read",
+        "CacheControl": "max-age=3600"
+      },
+      {
+        "glob": "*.html",
+        "CacheControl": "max-age=300"
+      }
+    ]
+  }
+},
+```
+
+The order of the config objects matters, the one that comes last is the one that will be used, as shown above:
+
+- CacheControl is set for all files but it's overidden by the next config object only for html files. Convenient for declaring exceptions and not repeat global settings.
+
+To set this using the environment variable `NG_DEPLOY_AWS_GLOB_FILE_UPLOAD_PARAMS_LIST`, simply stringify the config object to JSON with `JSON.stringify`.
+
+```bash
+npx cross-env ... NG_DEPLOY_AWS_GLOB_FILE_UPLOAD_PARAMS_LIST='[{"glob":"*","ACL":"public-read","CacheControl":"max-age=3600"},{"glob":"*.html","CacheControl":"max-age=300"}]' ... ng deploy
+```
+
+8. Run `ng deploy` to deploy your application to Amazon S3.
 
 🚀**_Happy deploying!_** 🚀
 

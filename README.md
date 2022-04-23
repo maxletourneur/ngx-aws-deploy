@@ -1,5 +1,9 @@
 # Disclaimer: This is a temporary fork from [@jefiozie/ngx-aws-deploy](https://www.npmjs.com/package/@jefiozie/ngx-aws-deploy) <-- use this instead
 
+# This temporary fork adds the new feature waiting to be merged in the original repo, vv linked below vv
+
+# [add a globFileUploadParamsList option to set properties on uploaded files](https://github.com/Jefiozie/ngx-aws-deploy/pull/410)
+
 # NGX-AWS-DEPLOY
 
 ☁️🚀 Deploy your Angular app to Amazon S3 directly from the Angular CLI 🚀☁️
