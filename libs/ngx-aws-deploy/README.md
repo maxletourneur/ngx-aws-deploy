@@ -1,6 +1,6 @@
 # Disclaimer: This is a temporary fork from [@jefiozie/ngx-aws-deploy](https://www.npmjs.com/package/@jefiozie/ngx-aws-deploy) <-- use this instead
 
-# This temporary fork adds the new feature waiting to be merged in the original repo, vv linked below vv
+# This temporary fork adds the new feature waiting to be merged in the original repo, linked below and described at step #7 of the Quick Start documentation below.
 
 # [add a globFileUploadParamsList option to set properties on uploaded files](https://github.com/Jefiozie/ngx-aws-deploy/pull/410)
 
