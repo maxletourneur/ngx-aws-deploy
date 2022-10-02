@@ -7,7 +7,7 @@ import {
   getSecretAccessKey,
   getRegion,
   getSubFolder,
-  getCfDistributionId
+  getCfDistributionId,
 } from './config';
 
 export class CloudFront {
@@ -25,49 +25,55 @@ export class CloudFront {
     this._builderConfig = builderConfig;
 
     this._region = getRegion(this._builderConfig);
-    this._cfDistributionId = getCfDistributionId();
+    this._cfDistributionId = getCfDistributionId(this._builderConfig);
     this._subFolder = getSubFolder(this._builderConfig);
 
     AWS.config.update({ region: this._region });
     this._cloudFront = new AWS.CloudFront({
       apiVersion: 'latest',
       secretAccessKey: getSecretAccessKey(),
-      accessKeyId: getAccessKeyId()
+      accessKeyId: getAccessKeyId(),
     });
   }
 
   public async invalidate(): Promise<boolean> {
     if (!this._cfDistributionId) {
-      this._context.logger.info('⚠️  Skipping invalidation of CloudFront distribution');
+      this._context.logger.info(
+        '⚠️  Skipping invalidation of CloudFront distribution'
+      );
       return true;
     }
 
     const cf_path = this._subFolder ? `/${this._subFolder}/*` : '/*';
     const reference = `ngx-aws-deploy-${new Date().getTime()}`;
 
-    const params : CreateInvalidationRequest = {
+    const params: CreateInvalidationRequest = {
       DistributionId: this._cfDistributionId,
       InvalidationBatch: {
         CallerReference: reference,
         Paths: {
           Quantity: 1,
-          Items: [
-            cf_path
-          ]
-        }
-      }
+          Items: [cf_path],
+        },
+      },
     };
 
-    this._context.logger.info(`Triggering invalidation of '${cf_path}' from CloudFront distribution ${this._cfDistributionId}`);
+    this._context.logger.info(
+      `Triggering invalidation of '${cf_path}' from CloudFront distribution ${this._cfDistributionId}`
+    );
 
     await this._cloudFront
       .createInvalidation(params)
       .promise()
       .then((data) => {
-        this._context.logger.info(`Successfully triggered invalidation of '${cf_path}' from CloudFront distribution ${this._cfDistributionId}: current status is '${data.Invalidation.Status}'`);
+        this._context.logger.info(
+          `Successfully triggered invalidation of '${cf_path}' from CloudFront distribution ${this._cfDistributionId}: current status is '${data.Invalidation.Status}'`
+        );
       })
       .catch((error) => {
-        this._context.logger.error(`❌  The following error was found during CloudFront invalidation ${error}`);
+        this._context.logger.error(
+          `❌  The following error was found during CloudFront invalidation ${error}`
+        );
         throw error;
       });
 
